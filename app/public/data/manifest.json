@@ -1,0 +1,103 @@
+{
+  "title": "해리 포터와 마법사의 돌",
+  "chapters": [
+    {
+      "id": "01_ch01_살아남은아이",
+      "file": "01_ch01_살아남은아이.app.json",
+      "audio": "01_ch01_살아남은아이.mp3",
+      "title": "01 ch01 살아남은아이",
+      "segments": 811
+    },
+    {
+      "id": "02_ch02_사라진유리창",
+      "file": "02_ch02_사라진유리창.app.json",
+      "audio": "02_ch02_사라진유리창.mp3",
+      "title": "02 ch02 사라진유리창",
+      "segments": 567
+    },
+    {
+      "id": "03_ch03_발신자없는편지들",
+      "file": "03_ch03_발신자없는편지들.app.json",
+      "audio": "03_ch03_발신자없는편지들.mp3",
+      "title": "03 ch03 발신자없는편지들",
+      "segments": 650
+    },
+    {
+      "id": "04_ch04_숲지기",
+      "file": "04_ch04_숲지기.app.json",
+      "audio": "04_ch04_숲지기.mp3",
+      "title": "04 ch04 숲지기",
+      "segments": 643
+    },
+    {
+      "id": "05_ch05a_다이애건앨리",
+      "file": "05_ch05a_다이애건앨리.app.json",
+      "audio": "05_ch05a_다이애건앨리.mp3",
+      "title": "05 ch05a 다이애건앨리",
+      "segments": 752
+    },
+    {
+      "id": "06_ch05b_다이애건앨리2",
+      "file": "06_ch05b_다이애건앨리2.app.json",
+      "audio": "06_ch05b_다이애건앨리2.mp3",
+      "title": "06 ch05b 다이애건앨리2",
+      "segments": 383
+    },
+    {
+      "id": "07_ch06a_정거장",
+      "file": "07_ch06a_정거장.app.json",
+      "audio": "07_ch06a_정거장.mp3",
+      "title": "07 ch06a 정거장",
+      "segments": 618
+    },
+    {
+      "id": "08_ch06b_정거장2",
+      "file": "08_ch06b_정거장2.app.json",
+      "audio": "08_ch06b_정거장2.mp3",
+      "title": "08 ch06b 정거장2",
+      "segments": 1045
+    },
+    {
+      "id": "09_ch07-08_기숙사배정_마법약교수",
+      "file": "09_ch07-08_기숙사배정_마법약교수.app.json",
+      "audio": "09_ch07-08_기숙사배정_마법약교수.mp3",
+      "title": "09 ch07-08 기숙사배정 마법약교수",
+      "segments": 507
+    },
+    {
+      "id": "10_ch09_한밤의결투",
+      "file": "10_ch09_한밤의결투.app.json",
+      "audio": "10_ch09_한밤의결투.mp3",
+      "title": "10 ch09 한밤의결투",
+      "segments": 835
+    },
+    {
+      "id": "11_ch10_핼러윈",
+      "file": "11_ch10_핼러윈.app.json",
+      "audio": "11_ch10_핼러윈.mp3",
+      "title": "11 ch10 핼러윈",
+      "segments": 701
+    },
+    {
+      "id": "12_ch11_퀴디치",
+      "file": "12_ch11_퀴디치.app.json",
+      "audio": "12_ch11_퀴디치.mp3",
+      "title": "12 ch11 퀴디치",
+      "segments": 571
+    },
+    {
+      "id": "13_ch12_이레지드거울",
+      "file": "13_ch12_이레지드거울.app.json",
+      "audio": "13_ch12_이레지드거울.mp3",
+      "title": "13 ch12 이레지드거울",
+      "segments": 941
+    },
+    {
+      "id": "14_ch13_니콜라플라멜",
+      "file": "14_ch13_니콜라플라멜.app.json",
+      "audio": "14_ch13_니콜라플라멜.mp3",
+      "title": "14 ch13 니콜라플라멜",
+      "segments": 567
+    }
+  ]
+}
