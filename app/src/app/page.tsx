@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { Manifest, ChapterData, Segment } from "./types";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import { useProgress } from "./hooks/useProgress";
-import { useFrequency } from "./hooks/useFrequency";
+import { useVocab } from "./hooks/useVocab";
 import { SubtitleDisplay } from "./components/SubtitleDisplay";
 import { PlayerControls } from "./components/PlayerControls";
 import { ChapterList } from "./components/ChapterList";
@@ -37,7 +37,7 @@ export default function Home() {
   const { progress, loaded, update, markChapterPlayed, markChapterCompleted } = useProgress();
 
   const segments = chapterData?.segments || [];
-  const segmentWords = useFrequency(segments);
+  const { segmentWords, cycleWord } = useVocab(segments);
 
   useEffect(() => {
     fetch("/data/manifest.json")
@@ -183,6 +183,7 @@ export default function Home() {
         segmentWords={segmentWords}
         currentIndex={currentSegmentIndex}
         onSegmentClick={handleSegmentClick}
+        onCycleWord={cycleWord}
       />
 
       <PlayerControls
