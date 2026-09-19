@@ -16,6 +16,7 @@ APP_DATA = Path("app/public/data")
 
 MAX_SEGMENT_S = 14.0
 MIN_SEGMENT_S = 1.5
+MAX_CHARS = 35
 
 SENTENCE_END = re.compile(
     r'(?:'
@@ -116,49 +117,73 @@ def merge_and_split(fragments):
     return segments
 
 
+CLAUSE_BREAK = re.compile(
+    r'(?:'
+    r',\s'
+    r'|'
+    r'(?:면서|하며|으며|지만|는데|ㄴ데|런데|서는|에서|니까|어서|아서|려고|도록|든지)\s'
+    r')',
+    re.UNICODE
+)
+
+
+def _find_split_points(text, min_edge=5):
+    """Find candidate split positions in text, ranked by quality."""
+    splits = []
+    for m in SENTENCE_END.finditer(text):
+        p = m.end()
+        if min_edge < p < len(text) - min_edge:
+            splits.append(('sentence', p))
+    for m in CLAUSE_BREAK.finditer(text):
+        p = m.end()
+        if min_edge < p < len(text) - min_edge:
+            splits.append(('clause', p))
+    for m in re.finditer(r'\s', text):
+        p = m.end()
+        if min_edge < p < len(text) - min_edge:
+            splits.append(('space', p))
+    return splits
+
+
+def _split_seg(seg, target_pos):
+    """Split a segment at a character position, interpolating time."""
+    text = seg["text"]
+    dur = seg["end"] - seg["start"]
+    frac = target_pos / len(text)
+    split_t = seg["start"] + frac * dur
+    p1 = {"start": seg["start"], "end": round(split_t, 3),
+           "text": text[:target_pos].strip(), "confidence": 1.0}
+    p2 = {"start": round(split_t, 3), "end": seg["end"],
+           "text": text[target_pos:].strip(), "confidence": 1.0}
+    return p1, p2
+
+
 def split_long(segments):
-    """Recursively split segments > MAX_SEGMENT_S at internal boundaries."""
+    """Recursively split segments that are too long (by time or char count)."""
     result = []
     for seg in segments:
+        text = seg["text"]
         dur = seg["end"] - seg["start"]
-        if dur <= MAX_SEGMENT_S:
+        too_long_time = dur > MAX_SEGMENT_S
+        too_long_chars = len(text) > MAX_CHARS
+
+        if not too_long_time and not too_long_chars:
             result.append(seg)
             continue
 
-        text = seg["text"]
-        # Find internal split points: sentence ends, then commas
-        splits = []
-        for m in SENTENCE_END.finditer(text):
-            p = m.end()
-            if 5 < p < len(text) - 5:
-                splits.append(p)
+        splits = _find_split_points(text)
         if not splits:
-            for m in re.finditer(r',\s', text):
-                p = m.end()
-                if 5 < p < len(text) - 5:
-                    splits.append(p)
-
-        if not splits:
-            # Last resort: split at nearest space to middle
-            for m in re.finditer(r'\s', text):
-                p = m.end()
-                if 5 < p < len(text) - 5:
-                    splits.append(p)
-
-        if splits:
-            mid = len(text) // 2
-            best = min(splits, key=lambda p: abs(p - mid))
-            frac = best / len(text)
-            split_t = seg["start"] + frac * dur
-
-            p1 = {"start": seg["start"], "end": round(split_t, 3),
-                   "text": text[:best].strip(), "confidence": 1.0}
-            p2 = {"start": round(split_t, 3), "end": seg["end"],
-                   "text": text[best:].strip(), "confidence": 1.0}
-            result.extend(split_long([p1]))
-            result.extend(split_long([p2]))
-        else:
             result.append(seg)
+            continue
+
+        mid = len(text) // 2
+        # Prefer clause/sentence breaks near the middle; space as fallback
+        rank = {'sentence': 0, 'clause': 1, 'space': 2}
+        best_pos = min(splits, key=lambda sp: (rank[sp[0]], abs(sp[1] - mid)))[1]
+        p1, p2 = _split_seg(seg, best_pos)
+
+        result.extend(split_long([p1]))
+        result.extend(split_long([p2]))
     return result
 
 
