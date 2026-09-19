@@ -78,12 +78,8 @@ export default function Home() {
     if (!segments.length) return;
     const time = player.currentTime;
     let idx = -1;
-    for (let i = 0; i < segments.length; i++) {
-      if (time >= segments[i].start && time < segments[i].end) {
-        idx = i;
-        break;
-      }
-      if (time >= segments[i].start && (i === segments.length - 1 || time < segments[i + 1].start)) {
+    for (let i = segments.length - 1; i >= 0; i--) {
+      if (time >= segments[i].start) {
         idx = i;
         break;
       }
