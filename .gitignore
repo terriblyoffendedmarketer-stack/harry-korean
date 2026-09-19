@@ -1,0 +1,16 @@
+# Large media files (not for git)
+originals/
+audio/
+audio_slow/
+v1/
+v2/
+
+# EPUB source
+*.epub
+
+# Node
+app/node_modules/
+app/.next/
+
+# OS
+.DS_Store
