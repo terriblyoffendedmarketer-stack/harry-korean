@@ -32,6 +32,7 @@ export default function Home() {
   const [chapterIndex, setChapterIndex] = useState(0);
   const [showChapters, setShowChapters] = useState(false);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(-1);
+  const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
   const player = useAudioPlayer();
   const { progress, loaded, update, markChapterPlayed, markChapterCompleted } = useProgress();
@@ -43,6 +44,10 @@ export default function Home() {
     fetch("/data/manifest.json")
       .then((r) => r.json())
       .then((m: Manifest) => setManifest(m));
+    fetch("/data/audio_urls.json")
+      .then((r) => r.json())
+      .then((urls: Record<string, string>) => setAudioUrls(urls))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -63,7 +68,8 @@ export default function Home() {
         setCurrentSegmentIndex(-1);
       });
 
-    const audio = player.loadAudio(`/audio/${ch.audio}`);
+    const audioSrc = audioUrls[ch.audio] || `/audio/${ch.audio}`;
+    const audio = player.loadAudio(audioSrc);
 
     if (chapterIndex === progress.chapterIndex && progress.position > 0) {
       audio.addEventListener("loadedmetadata", () => {
@@ -72,7 +78,7 @@ export default function Home() {
     }
 
     update({ chapterIndex });
-  }, [chapterIndex, manifest]);
+  }, [chapterIndex, manifest, audioUrls]);
 
   useEffect(() => {
     if (!segments.length) return;
