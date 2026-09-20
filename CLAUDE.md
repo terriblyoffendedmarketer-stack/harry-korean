@@ -1,7 +1,7 @@
 # Harry Potter Korean Audiobook Learning Tool
 
 ## Status
-- **Phase**: Core features complete, vocab dictionary could be expanded
+- **Phase**: Deployed and live at https://yer-a-korean-harry.vercel.app
 - **Source**: 뭉이모TV YouTube channel (14 Harry Potter 마법사의돌 audiobook videos)
 - **Goal**: Learning aid app — 0.75x audiobook player with synced Korean subtitles and learning science features
 
@@ -14,7 +14,11 @@
 - [x] Fix subtitle sync (reverse-scan matching, verified with Whisper)
 - [x] Rechunk subtitles at sentence boundaries
 - [x] LingQ-style vocabulary glossing (tap-to-reveal English definitions)
-- [ ] Expand dictionary beyond 375 entries
+- [x] Dictionary expanded to 452 entries (grammar particles, adverbs, spatial words)
+- [x] Deploy to Vercel with audio on Vercel Blob
+- [x] Detailed chapter story-beat summaries (tap "i" to expand)
+- [ ] Per-sentence English translation toggle (concept approved, deferred)
+- [ ] Capacitor APK for native Android install
 
 ## File Map
 - `originals/` — Raw downloaded videos (14 MP4 files)
@@ -26,7 +30,9 @@
 - `chapters_aligned/` — EPUB text split per video
 - `app/` — Next.js web app (the main deliverable)
 - `app/public/audio/` — Symlinks to audio_slow MP3s
-- `app/public/data/` — Rechunked subtitle JSON + manifest + dictionary.json
+- `app/public/data/` — Rechunked subtitle JSON + manifest + dictionary.json + audio_urls.json
+- `audio_web/` — Compressed audio for web (96kbps mono, 453MB total, NOT in git)
+- `scripts/upload_audio_blob.sh` — Upload compressed audio to Vercel Blob
 - `app/src/app/hooks/useVocab.ts` — LingQ-style vocabulary hook (replaces useFrequency)
 - `app/src/app/components/SubtitleDisplay.tsx` — Subtitle view with tappable vocab words
 - `scripts/download.sh` — Downloads videos + subs via yt-dlp (needs Chrome cookies)
@@ -65,4 +71,7 @@ Requires: node 18+, yt-dlp, ffmpeg, python3
 - Ch5/6 split into 2 videos each; Ch7+8 combined in one video
 - Subtitle sync uses reverse-scan (last segment whose start ≤ currentTime)
 - Rechunking: Korean sentence-end regex + verb endings + space fallback
-- Dictionary has 375 entries covering most frequent content words
+- Dictionary has 452 entries (content words + grammar particles + spatial words)
+- Audio hosted on Vercel Blob (96kbps mono 44kHz, voice quality preserved)
+- Vercel project: chilling1/app, SSO protection disabled for public access
+- Audio blob token from send-to-xteink project's BLOB_READ_WRITE_TOKEN

@@ -12,5 +12,21 @@ v2/
 app/node_modules/
 app/.next/
 
+# Compressed web audio (uploaded to Vercel Blob)
+audio_web/
+
+# APK builds
+*.apk
+
+# Android build artifacts
+app/android/app/build/
+app/android/.gradle/
+app/android/build/
+app/android/capacitor-cordova-android-plugins/build/
+app/android/capacitor-android/build/
+
+# Next.js static export (regenerated from build)
+app/out/
+
 # OS
 .DS_Store

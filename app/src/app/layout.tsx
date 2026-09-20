@@ -8,8 +8,14 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "해리 포터 한국어 학습",
-  description: "Harry Potter Korean audiobook learning aid",
+  metadataBase: new URL("https://yer-a-korean-harry.vercel.app"),
+  title: "H해 — Harry Potter Korean Audiobook",
+  description: "Listen to Harry Potter in Korean at 0.75x speed with synced subtitles, vocab glossing, and chapter summaries.",
+  openGraph: {
+    title: "H해 — Harry Potter Korean Audiobook",
+    description: "Listen to Harry Potter in Korean at 0.75x speed with synced subtitles, vocab glossing, and chapter summaries.",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {

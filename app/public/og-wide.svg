@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a3e"/>
+      <stop offset="100%" stop-color="#0f0f1a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd700"/>
+      <stop offset="50%" stop-color="#daa520"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8e8ff"/>
+      <stop offset="50%" stop-color="#c0c0e0"/>
+      <stop offset="100%" stop-color="#9090c0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Lightning bolt -->
+  <path d="M600 50 L618 130 L604 130 L618 180 L588 115 L602 115 Z" fill="url(#gold)" opacity="0.5"/>
+  <!-- H -->
+  <text x="440" y="400" font-family="Georgia, 'Times New Roman', serif" font-size="280" font-weight="bold" fill="url(#gold)" text-anchor="middle">H</text>
+  <!-- 해 -->
+  <text x="760" y="400" font-family="'Noto Serif KR', 'Batang', serif" font-size="260" font-weight="bold" fill="url(#silver)" text-anchor="middle">해</text>
+  <!-- Subtitle -->
+  <text x="600" y="530" font-family="Georgia, 'Noto Serif KR', serif" font-size="32" fill="#9090c0" text-anchor="middle">Harry Potter Korean Audiobook</text>
+  <!-- Sparkles -->
+  <circle cx="120" cy="100" r="3" fill="#ffd700" opacity="0.4"/>
+  <circle cx="1080" cy="120" r="2.5" fill="#e8e8ff" opacity="0.3"/>
+  <circle cx="150" cy="530" r="2" fill="#ffd700" opacity="0.3"/>
+  <circle cx="1050" cy="500" r="3" fill="#e8e8ff" opacity="0.3"/>
+  <circle cx="600" cy="590" r="2" fill="#ffd700" opacity="0.2"/>
+</svg>
