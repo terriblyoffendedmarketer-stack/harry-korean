@@ -179,8 +179,17 @@ export default function Home() {
           해리 포터 한국어
         </h1>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3">
           <span className="text-xs text-[var(--text-dim)]">0.75x</span>
+          <a
+            href="https://github.com/terriblyoffendedmarketer-stack/harry-korean/releases/download/v1.0.0/yer-a-korean-harry.apk"
+            className="text-[var(--text-dim)] hover:text-[var(--foreground)] transition-colors"
+            title="Download Android app"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5 20h14v-2H5v2zm7-18L5.33 8.67l1.42 1.42L11 5.83V16h2V5.83l4.25 4.26 1.42-1.42L12 2z" transform="rotate(180 12 12)" />
+            </svg>
+          </a>
         </div>
       </header>
 
