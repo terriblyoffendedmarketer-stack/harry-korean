@@ -12,6 +12,7 @@
 - [x] Build Next.js web app with audiobook player
 - [x] Implement learning features (vocab glossing, replay, progress)
 - [x] Fix subtitle sync (reverse-scan matching, verified with Whisper)
+- [x] Subtitle reading UX: 0.5s linger buffer + two-line highlight window
 - [x] Rechunk subtitles at sentence boundaries
 - [x] LingQ-style vocabulary glossing (tap-to-reveal English definitions)
 - [x] Dictionary expanded to 452 entries (grammar particles, adverbs, spatial words)
@@ -69,7 +70,8 @@ Requires: node 18+, yt-dlp, ffmpeg, python3
 - Videos use Chrome cookies for download (`--cookies-from-browser chrome`)
 - EPUB Section0033 is Book 2 preview — excluded from extraction
 - Ch5/6 split into 2 videos each; Ch7+8 combined in one video
-- Subtitle sync uses reverse-scan (last segment whose start ≤ currentTime)
+- Subtitle sync uses reverse-scan with 0.5s linger buffer (delays highlight advance)
+- Two-line reading window: current line + previous line both stay visible during transitions
 - Rechunking: Korean sentence-end regex + verb endings + space fallback
 - Dictionary has 452 entries (content words + grammar particles + spatial words)
 - Audio hosted on Vercel Blob (96kbps mono 44kHz, voice quality preserved)

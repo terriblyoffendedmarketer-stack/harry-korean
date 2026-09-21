@@ -32,6 +32,7 @@ export default function Home() {
   const [chapterIndex, setChapterIndex] = useState(0);
   const [showChapters, setShowChapters] = useState(false);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(-1);
+  const [previousSegmentIndex, setPreviousSegmentIndex] = useState(-1);
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
   const player = useAudioPlayer();
@@ -66,6 +67,7 @@ export default function Home() {
       .then((data: ChapterData) => {
         setChapterData(data);
         setCurrentSegmentIndex(-1);
+        setPreviousSegmentIndex(-1);
       });
 
     const audioSrc = audioUrls[ch.audio] || `/audio/${ch.audio}`;
@@ -80,17 +82,22 @@ export default function Home() {
     update({ chapterIndex });
   }, [chapterIndex, manifest, audioUrls]);
 
+  // Linger buffer: delay advancing the highlight by 0.5s so the reader
+  // finishes the current line before the highlight jumps forward.
+  const LINGER_SECONDS = 0.5;
   useEffect(() => {
     if (!segments.length) return;
     const time = player.currentTime;
     let idx = -1;
     for (let i = segments.length - 1; i >= 0; i--) {
-      if (time >= segments[i].start) {
+      const threshold = i > 0 ? segments[i].start + LINGER_SECONDS : segments[i].start;
+      if (time >= threshold) {
         idx = i;
         break;
       }
     }
     if (idx !== currentSegmentIndex) {
+      setPreviousSegmentIndex(currentSegmentIndex);
       setCurrentSegmentIndex(idx);
     }
   }, [player.currentTime, segments, currentSegmentIndex]);
@@ -197,6 +204,7 @@ export default function Home() {
         segments={segments}
         segmentWords={segmentWords}
         currentIndex={currentSegmentIndex}
+        previousIndex={previousSegmentIndex}
         onSegmentClick={handleSegmentClick}
         onCycleWord={cycleWord}
       />

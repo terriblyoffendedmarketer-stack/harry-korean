@@ -8,6 +8,7 @@ interface Props {
   segments: Segment[];
   segmentWords: VocabWord[][];
   currentIndex: number;
+  previousIndex: number;
   onSegmentClick: (index: number) => void;
   onCycleWord: (stem: string) => void;
 }
@@ -35,6 +36,7 @@ export function SubtitleDisplay({
   segments,
   segmentWords,
   currentIndex,
+  previousIndex,
   onSegmentClick,
   onCycleWord,
 }: Props) {
@@ -90,7 +92,8 @@ export function SubtitleDisplay({
       <div className="max-w-lg mx-auto space-y-2">
         {segments.map((seg, i) => {
           const isActive = i === currentIndex;
-          const isPast = i < currentIndex;
+          const isTrailing = i === previousIndex && previousIndex !== currentIndex && previousIndex >= 0;
+          const isPast = i < currentIndex && !isTrailing;
           const isFuture = i > currentIndex && i <= currentIndex + 4;
           const words = segmentWords[i] || [];
 
@@ -100,22 +103,23 @@ export function SubtitleDisplay({
               ref={isActive ? activeRef : undefined}
               onClick={() => onSegmentClick(i)}
               className={`
-                px-3 py-2 rounded-lg cursor-pointer transition-all duration-300
+                px-3 py-2 rounded-lg cursor-pointer transition-all duration-500
                 ${isActive ? "bg-[var(--surface)] border border-[var(--accent)] shadow-[0_0_20px_rgba(124,58,237,0.15)]" : ""}
+                ${isTrailing ? "bg-[var(--surface)]/50 border border-[var(--accent)]/20 opacity-70" : ""}
                 ${isPast ? "opacity-30" : ""}
                 ${isFuture ? "opacity-80" : ""}
-                ${!isActive && !isPast ? "hover:bg-[var(--surface-hover)]" : ""}
+                ${!isActive && !isTrailing && !isPast ? "hover:bg-[var(--surface-hover)]" : ""}
               `}
             >
-              <p className={`leading-relaxed ${isActive ? "text-xl font-medium" : "text-lg"}`}>
+              <p className={`leading-relaxed ${isActive ? "text-xl font-medium" : isTrailing ? "text-lg" : "text-lg"}`}>
                 {words.map((w, j) => (
                   <span
                     key={j}
                     onClick={(e) => handleWordClick(e, w)}
                     className={`
-                      ${wordClass(w.status, isActive)}
+                      ${wordClass(w.status, isActive || isTrailing)}
                       ${w.definition ? "cursor-pointer" : ""}
-                      ${isActive ? "text-[var(--foreground)]" : ""}
+                      ${isActive || isTrailing ? "text-[var(--foreground)]" : ""}
                     `}
                   >
                     {w.text}{" "}
