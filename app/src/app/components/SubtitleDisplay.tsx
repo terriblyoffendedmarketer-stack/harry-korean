@@ -50,7 +50,7 @@ export function SubtitleDisplay({
       const el = activeRef.current;
       const containerRect = container.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();
-      const offset = elRect.top - containerRect.top - containerRect.height / 3;
+      const offset = elRect.top - containerRect.top - containerRect.height * 0.4;
       container.scrollTo({ top: container.scrollTop + offset, behavior: "smooth" });
     }
   }, [currentIndex]);
@@ -93,8 +93,10 @@ export function SubtitleDisplay({
         {segments.map((seg, i) => {
           const isActive = i === currentIndex;
           const isTrailing = i === previousIndex && previousIndex !== currentIndex && previousIndex >= 0;
+          const isUpcoming = i === currentIndex + 1;
           const isPast = i < currentIndex && !isTrailing;
-          const isFuture = i > currentIndex && i <= currentIndex + 4;
+          const isFuture = i > currentIndex + 1 && i <= currentIndex + 5;
+          const inReadingWindow = isActive || isTrailing || isUpcoming;
           const words = segmentWords[i] || [];
 
           return (
@@ -103,23 +105,26 @@ export function SubtitleDisplay({
               ref={isActive ? activeRef : undefined}
               onClick={() => onSegmentClick(i)}
               className={`
-                px-3 py-2 rounded-lg cursor-pointer transition-all duration-500
+                px-3 py-2 rounded-lg cursor-pointer transition-all duration-300
                 ${isActive ? "bg-[var(--surface)] border border-[var(--accent)] shadow-[0_0_20px_rgba(124,58,237,0.15)]" : ""}
-                ${isTrailing ? "bg-[var(--surface)]/50 border border-[var(--accent)]/20 opacity-70" : ""}
-                ${isPast ? "opacity-30" : ""}
-                ${isFuture ? "opacity-80" : ""}
-                ${!isActive && !isTrailing && !isPast ? "hover:bg-[var(--surface-hover)]" : ""}
+                ${isTrailing ? "bg-[var(--surface)]/40 border border-[var(--accent)]/15" : ""}
+                ${isUpcoming ? "bg-[var(--surface)]/30 border border-transparent" : ""}
+                ${isPast ? "opacity-25" : ""}
+                ${isFuture ? "opacity-60" : ""}
+                ${!inReadingWindow && !isPast && !isFuture ? "hover:bg-[var(--surface-hover)]" : ""}
               `}
             >
-              <p className={`leading-relaxed ${isActive ? "text-xl font-medium" : isTrailing ? "text-lg" : "text-lg"}`}>
+              <p className={`leading-relaxed ${isActive ? "text-xl font-medium" : "text-lg"}`}>
                 {words.map((w, j) => (
                   <span
                     key={j}
                     onClick={(e) => handleWordClick(e, w)}
                     className={`
-                      ${wordClass(w.status, isActive || isTrailing)}
+                      ${wordClass(w.status, inReadingWindow)}
                       ${w.definition ? "cursor-pointer" : ""}
-                      ${isActive || isTrailing ? "text-[var(--foreground)]" : ""}
+                      ${isActive ? "text-[var(--foreground)]" : ""}
+                      ${isTrailing ? "text-[var(--foreground)]/70" : ""}
+                      ${isUpcoming ? "text-[var(--foreground)]/50" : ""}
                     `}
                   >
                     {w.text}{" "}

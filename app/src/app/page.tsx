@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { Manifest, ChapterData, Segment } from "./types";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import { useProgress } from "./hooks/useProgress";
@@ -82,25 +82,32 @@ export default function Home() {
     update({ chapterIndex });
   }, [chapterIndex, manifest, audioUrls]);
 
-  // Linger buffer: delay advancing the highlight by 0.5s so the reader
-  // finishes the current line before the highlight jumps forward.
-  const LINGER_SECONDS = 0.5;
+  // Segment sync runs directly in the animation frame loop (not via React state)
+  // to avoid batching delays that cause segment skipping.
+  const segmentIndexRef = useRef(-1);
+  const segmentsRef = useRef(segments);
+  segmentsRef.current = segments;
+
   useEffect(() => {
-    if (!segments.length) return;
-    const time = player.currentTime;
-    let idx = -1;
-    for (let i = segments.length - 1; i >= 0; i--) {
-      const threshold = i > 0 ? segments[i].start + LINGER_SECONDS : segments[i].start;
-      if (time >= threshold) {
-        idx = i;
-        break;
+    player.setOnTime((time: number) => {
+      const segs = segmentsRef.current;
+      if (!segs.length) return;
+      let idx = -1;
+      for (let i = segs.length - 1; i >= 0; i--) {
+        if (time >= segs[i].start) {
+          idx = i;
+          break;
+        }
       }
-    }
-    if (idx !== currentSegmentIndex) {
-      setPreviousSegmentIndex(currentSegmentIndex);
-      setCurrentSegmentIndex(idx);
-    }
-  }, [player.currentTime, segments, currentSegmentIndex]);
+      if (idx !== segmentIndexRef.current) {
+        const prev = segmentIndexRef.current;
+        segmentIndexRef.current = idx;
+        setPreviousSegmentIndex(prev);
+        setCurrentSegmentIndex(idx);
+      }
+    });
+    return () => player.setOnTime(null);
+  }, [player]);
 
   useEffect(() => {
     if (!player.isPlaying) return;

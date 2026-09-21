@@ -9,10 +9,19 @@ export function useAudioPlayer() {
   const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const animFrameRef = useRef<number>(0);
+  const onTimeRef = useRef<((t: number) => void) | null>(null);
+  const lastReportedTimeRef = useRef<number>(0);
 
   const tick = useCallback(() => {
     if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
+      const t = audioRef.current.currentTime;
+      // Fire the time callback on every frame for responsive sync
+      onTimeRef.current?.(t);
+      // Only update React state every ~250ms for UI (progress bar, etc.)
+      if (Math.abs(t - lastReportedTimeRef.current) > 0.25) {
+        lastReportedTimeRef.current = t;
+        setCurrentTime(t);
+      }
     }
     animFrameRef.current = requestAnimationFrame(tick);
   }, []);
@@ -59,6 +68,9 @@ export function useAudioPlayer() {
       audioRef.current.pause();
       setIsPlaying(false);
       cancelAnimationFrame(animFrameRef.current);
+      if (audioRef.current) {
+        setCurrentTime(audioRef.current.currentTime);
+      }
     }
   }, []);
 
@@ -66,6 +78,7 @@ export function useAudioPlayer() {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
       setCurrentTime(time);
+      lastReportedTimeRef.current = time;
     }
   }, []);
 
@@ -78,6 +91,10 @@ export function useAudioPlayer() {
     },
     [seek]
   );
+
+  const setOnTime = useCallback((cb: ((t: number) => void) | null) => {
+    onTimeRef.current = cb;
+  }, []);
 
   const onEnded = useCallback((cb: () => void) => {
     if (audioRef.current) {
@@ -107,5 +124,6 @@ export function useAudioPlayer() {
     seek,
     rewind,
     onEnded,
+    setOnTime,
   };
 }
